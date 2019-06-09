@@ -1,0 +1,23 @@
+#!/bin/bash
+pname=$(basename "$0")
+dname=$(dirname "$0")
+usage="$pname [Options] [File ...]"
+
+test "$HIDEMARU" = "" && HIDEMARU='/c/Program Files/hidemaru/Hidemaru.exe'
+multifile_mac=multiplefile.mac
+test "$DEBUG_OPENMULTIPLEFILEWITHHIDEMARU" = "" || multifile_mac=$(cygpath -wa "$dname/$multifile_mac")
+
+declare -a argv
+declare -i argc=0
+for arg; do
+  case "$arg" in
+  -*)
+    argv[$((argc++))]="/${arg:1}"
+    ;;
+  *)
+    winpath=$(cygpath -w "$arg")
+    argv[$((argc++))]="/a\"${winpath/\"/\"\"}\""
+    ;;
+  esac
+done
+cygstart "$HIDEMARU" "/x$multifile_mac" "${argv[@]}"

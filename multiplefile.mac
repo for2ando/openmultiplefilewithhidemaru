@@ -1,0 +1,22 @@
+// open multiple file
+// A shim for 'openmultiplefilewithhidemaru' shell script.
+// usage: Hidemaru.exe /xmultifile.mac /a"FileName1" [/a"FileName2" [...]]
+
+//loaddll("HmOutputPane.dll");
+#argc = argcount;
+#argn = 0;
+while (#argn < #argc) {
+  $filename[#argn] = getarg(#argn);
+  #argn = #argn + 1;
+}
+#argn = 0;
+while (#argn < #argc) {
+  $filename = $filename[#argn];
+  openfile $filename;
+  //loaddll("HmOutputPane.dll");
+  #argn = #argn + 1;
+}
+endmacro;
+
+dbgout:
+  return dllfunc("Output",hidemaruhandle(0),$$1);
