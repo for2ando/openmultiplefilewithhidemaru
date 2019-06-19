@@ -20,4 +20,5 @@ for arg; do
     ;;
   esac
 done
-cygstart "$HIDEMARU" "/x$multifile_mac" "${argv[@]}"
+cwd=$(cygpath -wa $(pwd))
+cygstart "$HIDEMARU" "/d$cwd" "/x$multifile_mac" "${argv[@]}"
