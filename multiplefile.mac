@@ -9,11 +9,22 @@ while (#argn < #argc) {
   $filename[#argn] = getarg(#argn);
   #argn = #argn + 1;
 }
+
+$cwd = directory;
+
 #argn = 0;
 while (#argn < #argc) {
   $filename = $filename[#argn];
-  openfile $filename;
-  //loaddll("HmOutputPane.dll");
+  if (strlen($filename) > 0) {
+    $c1 = leftstr($filename, 1);
+    $s23 = midstr($filename, 1, 2);
+    if ($c1 != "\\" && (!(strstr("abcdefghijklmnopqrstuvwxyz", tolower($c1)) && $s23 == ":\\"))) {
+      $filename = $cwd + "\\" + $filename;
+    }
+    //call dbgout, $filename + "\r\n";
+    openfile $filename;
+    //loaddll("HmOutputPane.dll");
+  }
   #argn = #argn + 1;
 }
 endmacro;
