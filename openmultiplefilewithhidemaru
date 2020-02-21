@@ -1,7 +1,15 @@
 #!/bin/bash
 pname=$(basename "$0")
 dname=$(dirname "$0")
-usage="$pname [Options] [File ...]"
+usage="$pname [HidemaruOptions] [{-f FilenameListFile|File} ...]
+  HidemaruOptions
+    Options for Hidemaru Editor delimited by space/tab character.
+    Each option has '-' instead of '/' as leading character.
+  File
+    A filename of file is to be opened with Hidemaru Editor.
+  FilenameListFile
+    A filename of a text files includes each filenames once at a line, which
+    are to be opened with Hidemaru Editor."
 
 test "$HIDEMARU" = "" && HIDEMARU='/c/Program Files/hidemaru/Hidemaru.exe'
 multifile_mac=multiplefile.mac
@@ -9,15 +17,27 @@ test "$DEBUG_OPENMULTIPLEFILEWITHHIDEMARU" = "" || multifile_mac=$(cygpath -wa "
 
 declare -a argv
 declare -i argc=0
-for arg; do
-  case "$arg" in
+while true; do
+  case "$1" in
+  '')
+    break;;
+  -f)
+    file="$2"
+    shift; shift
+    declare -a lines=()
+    while read line; do
+      lines+=("$line")
+    done <"$file"
+    set "${lines[@]}" "$@"
+    unset lines
+    ;;
   -*)
-    argv[$((argc++))]="/${arg:1}"
-    ;;
+    argv[$((argc++))]="/${1:1}"
+    shift;;
   *)
-    winpath=$(cygpath -w "$arg")
+    winpath=$(cygpath -w "$1")
     argv[$((argc++))]="/a\"${winpath/\"/\"\"}\""
-    ;;
+    shift;;
   esac
 done
 cwd=$(cygpath -wa $(pwd))
