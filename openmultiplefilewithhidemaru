@@ -11,7 +11,7 @@ usage="$pname [HidemaruOptions] [{-f FilenameListFile|File} ...]
     A filename of a text files includes each filenames once at a line, which
     are to be opened with Hidemaru Editor."
 
-test "$HIDEMARU" = "" && HIDEMARU='/c/Program Files/hidemaru/Hidemaru.exe'
+test "$HIDEMARU" = "" && HIDEMARU='c:\Program Files\hidemaru\Hidemaru.exe'
 multifile_mac=multiplefile.mac
 test "$DEBUG_OPENMULTIPLEFILEWITHHIDEMARU" = "" || multifile_mac=$(cygpath -wa "$dname/$multifile_mac")
 
@@ -41,4 +41,5 @@ while true; do
   esac
 done
 cwd=$(cygpath -wa $(pwd))
-cygstart "$HIDEMARU" "/d$cwd" "/x$multifile_mac" "${argv[@]}"
+hidemaru=$(cygpath -ua "$HIDEMARU")
+cygstart "$hidemaru" "/d$cwd" "/x$multifile_mac" "${argv[@]}"
